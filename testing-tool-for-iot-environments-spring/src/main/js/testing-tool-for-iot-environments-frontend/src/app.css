@@ -1,0 +1,59 @@
+.wrapper {
+  display: grid;
+}
+.one_one {
+  grid-column: 1;
+  grid-row: 1;
+}
+.one_two {
+  grid-column: 1;
+  grid-row: 2;
+}
+.one_three {
+  grid-column: 1;
+  grid-row: 3;
+}
+.one_four {
+  grid-column: 1;
+  grid-row: 4;
+}
+.one_five {
+  grid-column: 1;
+  grid-row: 5;
+}
+.one_six {
+  grid-column: 1;
+  grid-row: 6;
+}
+.one_seven {
+  grid-column: 1;
+  grid-row: 7;
+}
+.two_one {
+  grid-column: 2;
+  grid-row: 1;
+}
+.two_two {
+  grid-column: 2;
+  grid-row: 2;
+}
+.two_three {
+  grid-column: 2;
+  grid-row: 3;
+}
+.two_four {
+  grid-column: 2;
+  grid-row: 4;
+}
+.two_five {
+  grid-column: 2;
+  grid-row: 5;
+}
+.two_six {
+  grid-column: 2;
+  grid-row: 6;
+}
+.two_seven {
+  grid-column: 2;
+  grid-row: 7;
+}
