@@ -1,187 +1,95 @@
 // @flow
 import React, { Component } from 'react';
-import axios from 'axios';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import InputForm from './InputForm';
+import SensorList from './SensorList';
+import MqttConsole from './MqttConsole';
 
-const inputElementStyle = {
-  alignSelf: 'center'
+type SensorDataObject = {
+  inputDataType:      string,
+  startingValue:      string,
+  maxNegSpike:        string,
+  maxPosSpike:        string,
+  dY:                 string,
+  anomalyProbability: string,
+  frequency:          string
+};
+
+type Sensor = {
+  sensorId: string,
+  sensorData: SensorDataObject
 }
-
-function stopSimulation() {
-  axios.get("/stopSimulation");
-  alert('Simulation stopped.');
-}
-
 
 class App extends Component {
 
-  // types
   state : {
-    inputDataType:      string,
-    startingValue:      string,
-    maxNegSpike:        string,
-    maxPosSpike:        string,
-    dY:                 string,
-    anomalyProbability: string,
-    frequency:          string
+    selectedSensorId: string,
+      sensors : Array<Sensor>
   }
-
-  handleChange : Function
-  // end of types
 
   constructor() {
-      super();
-      this.state = {
-        inputDataType:      'int',
-        startingValue:      '',
-        maxNegSpike:        '',
-        maxPosSpike:        '',
-        dY:                 '',
-        anomalyProbability: '',
-        frequency:          ''
-      };
-
-      this.handleChange = this.handleChange.bind(this);
-    }
+    super();
+    this.state = {
+      selectedSensorId: '',
+      sensors: []
+    };
 
 
-  startSimulation = () => {
-    const inputDataType      : string = "inputDataType="      + this.state.inputDataType;
-    const startingValue      : string = "startingValue="      + this.state.startingValue;
-    const maxNegSpike        : string = "maxNegSpike="        + this.state.maxNegSpike;
-    const maxPosSpike        : string = "maxPosSpike="        + this.state.maxPosSpike;
-    const dY                 : string = "dY="                 + this.state.dY;
-    const anomalyProbability : string = "anomalyProbability=" + this.state.anomalyProbability;
-    const frequency          : string = "frequency="          + this.state.frequency;
+  }
 
-    const request : string = "/startSimulation?" + inputDataType      + "&"
-                                                  + startingValue      + "&"
-                                                  + maxNegSpike        + "&"
-                                                  + maxPosSpike        + "&"
-                                                  + dY                 + "&"
-                                                  + anomalyProbability + "&"
-                                                  + frequency
+  handleSensorInput = (newSensorData : SensorDataObject): void =>  {
+    let updatedSensors = this.state.sensors;
+    updatedSensors.map((iterSensor) => {
+      if (iterSensor.sensorId === this.state.selectedSensorId)
+        iterSensor.sensorData = newSensorData;
+    });
 
-    axios.get(request);
-    alert('Simulation started.');
+    this.setState({
+      sensors: updatedSensors
+    });
+  }
+
+  handleSensorCreate = (newSensor: Sensor): void =>  {
+    let updatedSensors = this.state.sensors;
+    updatedSensors.push(newSensor);
+
+    this.setState({
+      sensors: updatedSensors
+    });
   }
 
 
-  changeSimulation = () => {
-    const inputDataType      : string = "inputDataType="      + this.state.inputDataType;
-    const startingValue      : string = "startingValue="      + this.state.startingValue;
-    const maxNegSpike        : string = "maxNegSpike="        + this.state.maxNegSpike;
-    const maxPosSpike        : string = "maxPosSpike="        + this.state.maxPosSpike;
-    const dY                 : string = "dY="                 + this.state.dY;
-    const anomalyProbability : string = "anomalyProbability=" + this.state.anomalyProbability;
-    const frequency          : string = "frequency="          + this.state.frequency;
+  handleSensorDelete = (sensorId: string): void =>  {
+    let updatedSensors = this.state.sensors;
+    updatedSensors.map((iterSensor) => (iterSensor.sensorId !== sensorId));
 
-    const request : string = "/changeSimulation?" + inputDataType      + "&"
-                                                  + startingValue      + "&"
-                                                  + maxNegSpike        + "&"
-                                                  + maxPosSpike        + "&"
-                                                  + dY                 + "&"
-                                                  + anomalyProbability + "&"
-                                                  + frequency
-
-    axios.get(request);
-    alert('Simulation started.');
-  }
-
-
-  handleChange(event : { target : {
-                            name : string,
-                            value : string
-                          }}) {
-
-    console.log(event.target);
-    console.log(event);
-    switch (event.target.name) {
-      case "inputDataType":
-        console.log(event.target.value);
-        this.setState({inputDataType: event.target.value});
-        break;
-      case "startingValue":
-        this.setState({startingValue: event.target.value});
-        break;
-      case "maxNegSpike":
-        this.setState({maxNegSpike: event.target.value});
-        break;
-      case "maxPosSpike":
-        this.setState({maxPosSpike: event.target.value});
-        break;
-      case "dY":
-        this.setState({dY: event.target.value});
-        break;
-      case "anomalyProbability":
-        this.setState({anomalyProbability: event.target.value});
-        break;
-      case "frequency":
-        this.setState({frequency: event.target.value});
-        break;
-      default:
-        break;
-    }
+    this.setState({
+      sensors: updatedSensors
+    });
   }
 
   render() {
     return (
-      <div  >
-        <div style={inputElementStyle}>
+      <div className="container-fluid">
+        <div className="row">
           <h2>Testing Tool For IoT Environments</h2>
         </div>
 
-        <form>
-          <div style={inputElementStyle}> Input Datatype: </div>
-          <select name="inputDataType" value={this.state.inputDataType} onChange={this.handleChange}>
-            <option value="int">Integer</option>
-            <option value="boolean">Boolean</option>
-            <option value="float">Float</option>
-          </select>
-          <br/>
-
-          <div style={inputElementStyle}>
-            Start Value:
+        <div className="row">
+          <div className="col-lg-4" style={{borderStyle: 'solid'}}>
+            <SensorList  sensorList={this.state.sensors}
+              selectedSensorId={this.state.selectedSensorId}
+              handleSensorCreate={this.handleSensorCreate}
+              handleSensorDelete={this.handleSensorDelete} />
           </div>
-          <input style={inputElementStyle} type="text" name="startingValue" onChange={this.handleChange}>
-          </input>
-          <br/>
-
-          <div style={inputElementStyle}>
-            Maximum Negative Spike:
+          <div className="col-lg-4" style={{borderStyle: 'solid'}}>
+            <InputForm onSubmit={this.handleSensorInput} />
           </div>
-          <input style={inputElementStyle} type="text" name="maxNegSpike" onChange={this.handleChange}></input>
-          <br/>
-
-          <div style={inputElementStyle}>
-            Maximum Positive Spike:</div>
-          <input style={inputElementStyle} type="text" name="maxPosSpike" onChange={this.handleChange}></input>
-          <br/>
-
-          <div style={inputElementStyle}>
-            Interval change:</div>
-          <input style={inputElementStyle} type="text" name="dY" onChange={this.handleChange}></input>
-          <br/>
-
-          <div style={inputElementStyle}>
-            Anomaly Probability:
+          <div className="col-lg-4" style={{borderStyle: 'solid'}}>
+            <MqttConsole sensorList={this.state.sensors} selectedSensorId={this.state.selectedSensorId} />
           </div>
-          <input style={inputElementStyle} type="text" name="anomalyProbability" onChange={this.handleChange}></input>
-          <br/>
 
-          <div style={inputElementStyle}>
-            Frequency:
-          </div>
-          <input style={inputElementStyle} type="text" name="frequency" onChange={this.handleChange}></input>
-        </form>
-
-
-        <button onClick={this.startSimulation}>Start Simulation</button>
-        <br/>
-      
-        <button onClick={this.changeSimulation}>Change Simulation</button>
-        <br/>
-
-        <button onClick={stopSimulation}>Stop Simulation</button>
+        </div>
       </div>
     );
   }
