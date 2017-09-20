@@ -30,7 +30,14 @@ public class BenchmarkManager {
         BenchmarkQuery.query();
 
 //        TODO: add NUMBER_OF_THREADS as parameter
-        JniProducerCaller.main(null);
+//        JniProducerCaller.main(null);
+        
+//        wo wird das hier gespeichert???
+        
+        
+
+        EPServiceProvider receiverSenderEngine = EPServiceProviderManager.getDefaultProvider();
+        
         
         while (!myManager.benchmarkFinished) {
         	try {
@@ -41,7 +48,6 @@ public class BenchmarkManager {
 			}
         }
 
-        myThreadManager.stopReceiverSenderThreads();
         
         long endTime = System.currentTimeMillis();
         

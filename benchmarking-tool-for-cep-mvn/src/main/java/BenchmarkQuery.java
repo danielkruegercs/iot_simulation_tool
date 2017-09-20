@@ -13,7 +13,7 @@ public class BenchmarkQuery {
         EPStatement statement = queryEngine.getEPAdministrator().createEPL(epl);
         statement.addListener( (newData, oldData) -> {
             int myValue = (int) newData[0].get("myValue");
-//            System.out.println(String.format("New Random value: %d", myValue));
+            System.out.println(String.format("New Random value: %d, Received time: %d", myValue, System.currentTimeMillis()));
         });
     }
 }

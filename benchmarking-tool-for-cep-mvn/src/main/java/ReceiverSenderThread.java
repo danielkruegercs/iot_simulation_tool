@@ -11,6 +11,13 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.realtime.PriorityScheduler;
+import javax.realtime.PriorityParameters;
+import javax.realtime.PeriodicParameters;
+import javax.realtime.RelativeTime;
+import javax.realtime.RealtimeThread;
+
+
 
 public class ReceiverSenderThread extends Thread {
 

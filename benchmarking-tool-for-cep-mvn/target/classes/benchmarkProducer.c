@@ -17,7 +17,7 @@
 #include <stdbool.h>
 #include <sys/mman.h>
 #include <stdbool.h>
-#include "JniProducerCaller.h"
+// #include "JniProducerCaller.h"
 
 
 #define PRE_ALLOCATION_SIZE (100*1024*1024) /* 100MB pagefault free buffer */
@@ -425,8 +425,8 @@ void checkAllFiles(int pNumberOfThreads)
 }
 
 
-// int main (int argc, char **argv)
-JNIEXPORT void JNICALL Java_JniProducerCaller_startBenchmark(JNIEnv * env, jobject  obj)
+int main (int argc, char **argv)
+// JNIEXPORT void JNICALL Java_JniProducerCaller_startBenchmark(JNIEnv * env, jobject  obj)
 {
   show_new_pagefault_count("Initial count", ">=0", ">=0");
 

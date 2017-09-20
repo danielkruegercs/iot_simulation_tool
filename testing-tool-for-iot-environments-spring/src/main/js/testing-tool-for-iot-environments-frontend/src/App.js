@@ -2,6 +2,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+const inputElementStyle = {
+  alignSelf: 'center'
+}
 
 function stopSimulation() {
   axios.get("/stopSimulation");
@@ -28,7 +31,7 @@ class App extends Component {
   constructor() {
       super();
       this.state = {
-        inputDataType:      '',
+        inputDataType:      'int',
         startingValue:      '',
         maxNegSpike:        '',
         maxPosSpike:        '',
@@ -90,9 +93,11 @@ class App extends Component {
                             value : string
                           }}) {
 
-
+    console.log(event.target);
+    console.log(event);
     switch (event.target.name) {
       case "inputDataType":
+        console.log(event.target.value);
         this.setState({inputDataType: event.target.value});
         break;
       case "startingValue":
@@ -120,32 +125,62 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
+      <div  >
+        <div style={inputElementStyle}>
           <h2>Testing Tool For IoT Environments</h2>
         </div>
 
         <form>
-         <p className="oneone"> Input Datatype: </p> <input className="twoone" type="text" name="inputDataType" onChange={this.handleChange}></input>
-         <br/>
-         <p className="onetwo"> Start Value:  </p> <input className="twotwo" type="text" name="startingValue" onChange={this.handleChange}></input>
-         <br/>
-         <p className="onethree"> Maximum Negative Spike:  </p> <input className="twothree" type="text" name="maxNegSpike" onChange={this.handleChange}></input>
-         <br/>
-         <p className="onefour"> Maximum Positive Spike: </p>  <input className="twofour" type="text" name="maxPosSpike" onChange={this.handleChange}></input>
-         <br/>
-         <p className="onefive"> Interval change: </p>  <input className="twofive" type="text" name="dY" onChange={this.handleChange}></input>
-         <br/>
-         <p className="onesix"> Anomaly Probability:  </p> <input className="twosix" type="text" name="anomalyProbability" onChange={this.handleChange}></input>
-         <br/>
-         <p className="oneseven"> Frequency: </p>  <input className="twoseven" type="text" name="frequency" onChange={this.handleChange}></input>
+          <div style={inputElementStyle}> Input Datatype: </div>
+          <select name="inputDataType" value={this.state.inputDataType} onChange={this.handleChange}>
+            <option value="int">Integer</option>
+            <option value="boolean">Boolean</option>
+            <option value="float">Float</option>
+          </select>
+          <br/>
+
+          <div style={inputElementStyle}>
+            Start Value:
+          </div>
+          <input style={inputElementStyle} type="text" name="startingValue" onChange={this.handleChange}>
+          </input>
+          <br/>
+
+          <div style={inputElementStyle}>
+            Maximum Negative Spike:
+          </div>
+          <input style={inputElementStyle} type="text" name="maxNegSpike" onChange={this.handleChange}></input>
+          <br/>
+
+          <div style={inputElementStyle}>
+            Maximum Positive Spike:</div>
+          <input style={inputElementStyle} type="text" name="maxPosSpike" onChange={this.handleChange}></input>
+          <br/>
+
+          <div style={inputElementStyle}>
+            Interval change:</div>
+          <input style={inputElementStyle} type="text" name="dY" onChange={this.handleChange}></input>
+          <br/>
+
+          <div style={inputElementStyle}>
+            Anomaly Probability:
+          </div>
+          <input style={inputElementStyle} type="text" name="anomalyProbability" onChange={this.handleChange}></input>
+          <br/>
+
+          <div style={inputElementStyle}>
+            Frequency:
+          </div>
+          <input style={inputElementStyle} type="text" name="frequency" onChange={this.handleChange}></input>
         </form>
 
 
         <button onClick={this.startSimulation}>Start Simulation</button>
         <br/>
+      
         <button onClick={this.changeSimulation}>Change Simulation</button>
         <br/>
+
         <button onClick={stopSimulation}>Stop Simulation</button>
       </div>
     );
