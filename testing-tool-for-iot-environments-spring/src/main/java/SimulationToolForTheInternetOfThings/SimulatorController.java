@@ -1,5 +1,7 @@
 package SimulationToolForTheInternetOfThings;
 
+
+import org.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -11,59 +13,58 @@ public class SimulatorController {
 
     @RequestMapping("/")
     public String index() {
-        return "index";
+    	return "index";
     }
 
 
-    @RequestMapping("/startSimulation")
+    @RequestMapping("/createSensor")
     @ResponseBody
-    public void startSimulation(String inputDataType, String startingValue, String maxNegSpike, String maxPosSpike, String dY, String anomalyProbability, String frequency) {
-        if (controllerThreadManager != null)
-            stopSimulation();
+    public JSONArray createSensor(String inputDataType, String startingValue, String maxNegSpike, String maxPosSpike, String dY, String anomalyProbability, String frequency, String sensorId) {
 
+    	
+    	
         SensorThreadClock threadClock = new SensorThreadClock(Integer.parseInt(frequency));
-        controllerThreadManager = new ThreadManager(Integer.parseInt(frequency));
-
+        
+        if (this.controllerThreadManager == null)
+        	controllerThreadManager = new ThreadManager(Integer.parseInt(frequency));
 
 
         // TODO: add numberOfThreads as parameter
-        int numberOfThreads = 5;
+        
         // TODO: add broker as parameter
-        String broker = "tcp://localhost:1883";
 
-        controllerThreadManager.setNumberOfThreads(numberOfThreads);
-        controllerThreadManager.setBroker(broker);
-
-        for (int i = 0; i < numberOfThreads; i++) {
-            controllerThreadManager.startNewThread( inputDataType,
-                    startingValue,
-                    maxNegSpike,
-                    maxPosSpike,
-                    dY,
-                    Float.parseFloat(anomalyProbability),
-                    Integer.parseInt(frequency),
-                    i,
-                    threadClock);
-        }
-    }
-
-
-    @RequestMapping("/changeSimulation")
-    @ResponseBody
-    public void changeSimulation(String inputDataType, String startingValue, String maxNegSpike, String maxPosSpike, String dY, String anomalyProbability, String frequency) {
-        controllerThreadManager.changeThreads(inputDataType,
+        controllerThreadManager.createSensor( inputDataType,
                 startingValue,
                 maxNegSpike,
                 maxPosSpike,
                 dY,
                 Float.parseFloat(anomalyProbability),
-                Integer.parseInt(frequency));
+                Integer.parseInt(frequency),
+                sensorId);
+        return controllerThreadManager.sensorsToJSONArray();
     }
 
-    @RequestMapping("/stopSimulation")
+
+    @RequestMapping("/updateSensor")
     @ResponseBody
-    public void stopSimulation() {
-        controllerThreadManager.stopAllThreads();
+    public JSONArray updateSensor(String inputDataType, String startingValue, String maxNegSpike, String maxPosSpike, String dY, String anomalyProbability, String frequency, String oldSensorId, String newSensorId) {
+        controllerThreadManager.updateSensor(inputDataType,
+                startingValue,
+                maxNegSpike,
+                maxPosSpike,
+                dY,
+                Float.parseFloat(anomalyProbability),
+                Integer.parseInt(frequency),
+                oldSensorId,
+                newSensorId);
+        return controllerThreadManager.sensorsToJSONArray();
+    }
+
+    @RequestMapping("/deleteSensor")
+    @ResponseBody
+    public JSONArray deleteSensor(String sensorId) {
+        controllerThreadManager.deleteSensor(sensorId);
+        return controllerThreadManager.sensorsToJSONArray();
     }
 
     @RequestMapping("/setBroker")

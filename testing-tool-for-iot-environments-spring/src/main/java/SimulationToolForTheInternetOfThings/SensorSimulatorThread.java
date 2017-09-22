@@ -40,7 +40,7 @@ public class SensorSimulatorThread extends Thread {
     boolean valueBoolean            = false;
 
 
-    private int threadId            = -1;
+    private String threadId         = "";
     private boolean stopRequested   = false;
 
 
@@ -54,16 +54,14 @@ public class SensorSimulatorThread extends Thread {
     // end of MQTT attribute
     // end of attributes
 
-    private long startingTime       = -1;
-    private SensorThreadClock threadClock = null;
-
+    
 
     // beginning of getters and setters
-    public int getThreadId() {
+    public String getThreadId() {
         return threadId;
     }
 
-    public void setThreadId(int threadId) {
+    public void setThreadId(String threadId) {
         this.threadId = threadId;
     }
 
@@ -84,16 +82,13 @@ public class SensorSimulatorThread extends Thread {
                                  String dY,
                                  float anomalyProbability,
                                  int frequency,
-                                 int threadId,
-                                 String broker,
-                                 long startingTime,
-                                 SensorThreadClock threadClock) {
+                                 String threadId) {
 
         this.threadId      = threadId;
         this.inputDatatype = inputDatatype;
         this.frequency     = frequency;
-        this.startingTime  = startingTime;
-        this.threadClock   = threadClock;
+        
+        
 
         if (inputDatatype.equals(new String("int"))) {
             this.startingValueInt = Integer.parseInt(startingValue);
@@ -110,8 +105,8 @@ public class SensorSimulatorThread extends Thread {
             this.anomalyProbability = anomalyProbability;
         }
 
-        this.broker         = broker;
-        this.topic          = "test" + this.threadId;
+        this.broker         = "tcp://localhost:1883";
+        this.topic          = this.threadId;
         String mqttContent  = "Message from MqttPublishSample: Thread " + this.threadId;
         this.qos            = 2;
         this.clientId       = "JavaSample_Thread_" + this.threadId;
@@ -170,24 +165,32 @@ public class SensorSimulatorThread extends Thread {
 
         while (!this.stopRequested) {
             JSONObject content = new JSONObject();
-            content.put("time", System.currentTimeMillis());
-
-            if (inputDatatype.equals(new String("int")))
-                content.put("value", this.generateInt());
-            else if (inputDatatype.equals(new String("float")))
-                content.put("value", this.generateFloat());
-            else if (inputDatatype.equals(new String("boolean")))
-                content.put("value", this.generateBoolean());
 
             try {
-                sampleClient = new MqttClient(broker, clientId, persistence);
+				content.put("time", System.currentTimeMillis());
+
+	            if (inputDatatype.equals(new String("int")))
+	                content.put("value", this.generateInt());
+	            else if (inputDatatype.equals(new String("float")))
+	                content.put("value", this.generateFloat());
+	            else if (inputDatatype.equals(new String("boolean")))
+	                content.put("value", this.generateBoolean());
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+            try {
+            	sampleClient = new MqttClient(broker, clientId, persistence);
                 MqttConnectOptions connOpts = new MqttConnectOptions();
                 connOpts.setCleanSession(true);
                 sampleClient.connect(connOpts);
 
                 MqttMessage message = new MqttMessage(content.toString().getBytes());
+                
                 message.setQos(qos);
                 this.sampleClient.publish(topic, message);
+                
                 this.sampleClient.disconnect();
             } catch (MqttException me) {
                 System.out.println("reason " + me.getReasonCode());
@@ -197,7 +200,6 @@ public class SensorSimulatorThread extends Thread {
                 System.out.println("excep " + me);
                 me.printStackTrace();
             }
-
 
 
             try {

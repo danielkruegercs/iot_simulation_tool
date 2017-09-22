@@ -5,6 +5,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -176,14 +177,21 @@ public class SensorSimulatorThread_nanowait extends Thread {
 //            System.out.println("Thread" + threadId + "Wait period ended.");
 
             JSONObject content = new JSONObject();
-            content.put("time", System.currentTimeMillis());
+            try {
+				content.put("time", System.currentTimeMillis());
 
-            if (inputDatatype.equals(new String("int")))
-                content.put("value", this.generateInt());
-            else if (inputDatatype.equals(new String("float")))
-                content.put("value", this.generateFloat());
-            else if (inputDatatype.equals(new String("boolean")))
-                content.put("value", this.generateBoolean());
+				if (inputDatatype.equals(new String("int")))
+	                content.put("value", this.generateInt());
+	            else if (inputDatatype.equals(new String("float")))
+	                content.put("value", this.generateFloat());
+	            else if (inputDatatype.equals(new String("boolean")))
+	                content.put("value", this.generateBoolean());
+
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 
 //            System.out.println("Thread" + threadId + ": " + content.toString());
 

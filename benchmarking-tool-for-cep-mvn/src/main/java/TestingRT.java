@@ -1,9 +1,10 @@
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.realtime.*;
 
 public class TestingRT {
-
+	
 	public static void main(String[] args) {
 		int priority = PriorityScheduler.instance().getMaxPriority() - 1;
 	    PriorityParameters priorityParameters = new PriorityParameters(priority);
@@ -15,14 +16,18 @@ public class TestingRT {
 	    PeriodicParameters periodicParameters = new PeriodicParameters(null,period, null,null,null,null);
 
 	    
-	    int numberOfThreads = 10;
-	    long startTime = System.currentTimeMillis() + (numberOfThreads * 100);
+	    int numberOfThreads = 5;
 	    long[] threadTimes = new long[numberOfThreads];
 	    
-	    System.out.println("Start time");
+	    
+	    Calendar cal = Calendar.getInstance();
+	    System.out.println("current date: " + cal.getTime());
+	    cal.add(Calendar.SECOND, 1);
+	    System.out.println("1 second later: " + cal.getTime());
+	    
+	    AbsoluteTime startTime = new AbsoluteTime(cal.getTime());
 	    System.out.println(startTime);
 	    
-	    System.out.println("Trying out more threads");
 	    
 	    for (int i = 0; i < numberOfThreads; i++) {
 	    	/* create periodic thread: */
@@ -32,8 +37,8 @@ public class TestingRT {
 		      {
 		    	AbsoluteTime myTime;
 		    	
-		    	
 		    	while(true)
+//		    	for (int j = 0; j < 2; j++)
 		        {
 					try {
 						waitForNextRelease();
@@ -44,7 +49,11 @@ public class TestingRT {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (System.currentTimeMillis() >= startTime) {
+					
+					
+					
+					if (Clock.getRealtimeClock().getTime().compareTo(startTime) >= 0) {
+//						myTime = System.currentTimeMillis();
 						myTime = Clock.getRealtimeClock().getTime();
 						break;
 					}

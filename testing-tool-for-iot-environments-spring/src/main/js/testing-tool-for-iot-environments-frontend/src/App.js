@@ -33,40 +33,21 @@ class App extends Component {
       selectedSensorId: '',
       sensors: []
     };
-
-
   }
 
-  handleSensorInput = (newSensorData : SensorDataObject): void =>  {
-    let updatedSensors = this.state.sensors;
-    updatedSensors.map((iterSensor) => {
-      if (iterSensor.sensorId === this.state.selectedSensorId)
-        iterSensor.sensorData = newSensorData;
-    });
-
+  // handlers
+  handleSensorUpdate = (newSensors: Array<Sensor>): void =>  {
     this.setState({
-      sensors: updatedSensors
+      sensors: newSensors 
     });
   }
-
-  handleSensorCreate = (newSensor: Sensor): void =>  {
-    let updatedSensors = this.state.sensors;
-    updatedSensors.push(newSensor);
-
+  
+  handleSelectedSensor = (selectedSensorId: string): void =>  {
     this.setState({
-      sensors: updatedSensors
+      selectedSensorId: selectedSensorId 
     });
   }
-
-
-  handleSensorDelete = (sensorId: string): void =>  {
-    let updatedSensors = this.state.sensors;
-    updatedSensors.map((iterSensor) => (iterSensor.sensorId !== sensorId));
-
-    this.setState({
-      sensors: updatedSensors
-    });
-  }
+  // end of handlers
 
   render() {
     return (
@@ -77,16 +58,16 @@ class App extends Component {
 
         <div className="row">
           <div className="col-lg-4" style={{borderStyle: 'solid'}}>
-            <SensorList  sensorList={this.state.sensors}
+            <SensorList sensors={this.state.sensors}
               selectedSensorId={this.state.selectedSensorId}
-              handleSensorCreate={this.handleSensorCreate}
-              handleSensorDelete={this.handleSensorDelete} />
+              handleSelectedSensor={this.handleSelectedSensor}
+              handleSensorUpdate={this.handleSensorUpdate} /> 
           </div>
           <div className="col-lg-4" style={{borderStyle: 'solid'}}>
-            <InputForm onSubmit={this.handleSensorInput} />
+            <InputForm handleSensorUpdate={this.handleSensorUpdate} />
           </div>
           <div className="col-lg-4" style={{borderStyle: 'solid'}}>
-            <MqttConsole sensorList={this.state.sensors} selectedSensorId={this.state.selectedSensorId} />
+            <MqttConsole selectedSensorId={this.state.selectedSensorId} />
           </div>
 
         </div>
