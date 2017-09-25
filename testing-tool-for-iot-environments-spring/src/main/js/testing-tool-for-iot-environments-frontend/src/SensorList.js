@@ -33,7 +33,10 @@ class SensorList extends Component {
 
   // handlers
   handleClick = (e: Object) => {
-    this.props.handleSelectedSensor(e.target.textContent);
+    if (this.props.selectedSensorId === e.target.textContent)
+      this.props.handleSelectedSensor('');
+    else
+      this.props.handleSelectedSensor(e.target.textContent);
   }
 
   handleDoubleClick = (e: Object) => {

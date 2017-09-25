@@ -127,7 +127,6 @@ public class ThreadManager extends Thread {
     public JSONArray sensorsToJSONArray() {
     	JSONArray temp = new JSONArray();
     	
-    	System.out.println(this.mySensors.size());
     	
     	for (int i = 0; i < this.mySensors.size(); i++) {
     		try {

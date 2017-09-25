@@ -22,12 +22,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/daniel/Daten/UNI_INFORMATIK/Semester_6/BA/Implementierung/esper-7.0.0-beta1/esper/lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="/home/daniel/Daten/UNI_INFORMATIK/Semester_6/BA/Implementierung/esper-7.0.0-beta1/esper/lib/janino-3.0.7.jar"/>
-	<classpathentry kind="lib" path="/home/daniel/Daten/UNI_INFORMATIK/Semester_6/BA/Implementierung/esper-7.0.0-beta1/esper/lib/commons-compiler-3.0.7.jar"/>
-	<classpathentry kind="lib" path="/home/daniel/Daten/UNI_INFORMATIK/Semester_6/BA/Implementierung/esper-7.0.0-beta1/esper/lib/cglib-nodep-3.2.5.jar"/>
-	<classpathentry kind="lib" path="/home/daniel/Daten/UNI_INFORMATIK/Semester_6/BA/Implementierung/esper-7.0.0-beta1/esper/lib/antlr-runtime-4.7.jar"/>
-	<classpathentry kind="lib" path="/home/daniel/Daten/UNI_INFORMATIK/Semester_6/BA/Implementierung/esper-7.0.0-beta1/esper-7.0.0-beta1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/com.aicas.jamaica.eclipse.launcher.vm.JamaicaVMType/jamaica-8.1-1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-8-openjdk-amd64"/>
 	<classpathentry kind="output" path="target/classes"/>

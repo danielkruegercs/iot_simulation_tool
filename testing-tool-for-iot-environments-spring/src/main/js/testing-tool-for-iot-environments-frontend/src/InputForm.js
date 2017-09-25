@@ -19,7 +19,8 @@ class InputForm extends Component {
     dY:                 string,
     anomalyProbability: string,
     frequency:          string,
-    sensorId:           string
+    sensorId:           string,
+    untouched:          boolean
   }
 
   handleChange : Function
@@ -28,17 +29,16 @@ class InputForm extends Component {
   constructor() {
       super();
       this.state = {
-        inputDataType:      'int',
+        inputDataType:      'boolean',
         startingValue:      '24',
         maxNegSpike:        '80',
         maxPosSpike:        '80',
         dY:                 '1',
         anomalyProbability: '10',
         frequency:          '1000',
-        sensorId:           'asdf'
+        sensorId:           'asdf',
+        untouched:          true
       };
-
-      this.handleChange = this.handleChange.bind(this);
     }
 
 
@@ -50,9 +50,9 @@ class InputForm extends Component {
     const dY                 : string = "dY="                 + this.state.dY;
     const anomalyProbability : string = "anomalyProbability=" + this.state.anomalyProbability;
     const frequency          : string = "frequency="          + this.state.frequency;
-    const sensorId          : string = "sensorId="          + this.state.sensorId;
+    const sensorId           : string = "sensorId="           + this.state.sensorId;
 
-    const request : string = "/createSensor?" + inputDataType      + "&"
+    const request : string = "/createSensor?" + inputDataType          + "&"
                                                   + startingValue      + "&"
                                                   + maxNegSpike        + "&"
                                                   + maxPosSpike        + "&"
@@ -65,6 +65,10 @@ class InputForm extends Component {
       .then((response) => {
         this.props.handleSensorUpdate(response.data);
       });
+
+    this.setState({
+      untouched: true
+    });
   }
 
 
@@ -76,30 +80,37 @@ class InputForm extends Component {
     const dY                 : string = "dY="                 + this.state.dY;
     const anomalyProbability : string = "anomalyProbability=" + this.state.anomalyProbability;
     const frequency          : string = "frequency="          + this.state.frequency;
+    const oldSensorId        : string = "oldSensorId="        + this.props.selectedSensorId;
+    const newSensorId        : string = "newSensorId="        + this.state.sensorId;
 
-    const request : string = "/changeSimulation?" + inputDataType      + "&"
+    const request : string = "/updateSensor?" + inputDataType          + "&"
                                                   + startingValue      + "&"
                                                   + maxNegSpike        + "&"
                                                   + maxPosSpike        + "&"
                                                   + dY                 + "&"
                                                   + anomalyProbability + "&"
-                                                  + frequency
+                                                  + frequency          + "&"
+                                                  + oldSensorId        + "&"
+                                                  + newSensorId;
 
-    axios.get(request);
-    alert('Simulation started.');
+    axios.get(request)
+      .then((response) => {
+        this.props.handleSensorUpdate(response.data);
+      });
+    
+    this.setState({
+      untouched: true
+    });
   }
 
 
-  handleChange(event : { target : {
+  handleChange = (event : { target : {
                             name : string,
                             value : string
-                          }}) {
+                          }}) => {
 
-    console.log(event.target);
-    console.log(event);
     switch (event.target.name) {
       case "inputDataType":
-        console.log(event.target.value);
         this.setState({inputDataType: event.target.value});
         break;
       case "startingValue":
@@ -126,61 +137,97 @@ class InputForm extends Component {
       default:
         break;
     }
+
+    if (this.props.selectedSensorId !== '')
+      this.setState({
+        untouched: false
+      });
   }
 
   render() {
+    if (this.props.selectedSensorId === '' && this.state.untouched == false)
+      this.setState({
+        untouched: true
+      });
+
+    const isSensorSelected = this.props.selectedSensorId !== '';
+    const isBoolean        = this.state.inputDataType   === 'boolean';
+
+    let renderValues = null;
+
+    // check if there is a sensor selected
+    // if (isSensorSelected && this.state.untouched && this.props.selectedSensorId !== this.state.sensorId) {
+    if (isSensorSelected && this.state.untouched )
+      renderValues = this.props.sensors.find((iterSensor) =>  {
+        return this.props.selectedSensorId === iterSensor.sensorId
+      });
+    else
+      renderValues = this.state;
+
+
     return (
       <div>
         <form className="center-block"> 
           <div > Input Datatype: </div>
-          <select name="inputDataType" value={this.state.inputDataType} onChange={this.handleChange}>
+          <select name="inputDataType" value={renderValues.inputDataType} onChange={this.handleChange}>
             <option value="int">Integer</option>
             <option value="boolean">Boolean</option>
             <option value="float">Float</option>
           </select>
           <br/>
 
+          {!isBoolean &&
+            <div>
+              {isBoolean}
+              <div >
+                Start Value:
+              </div>
+              <input  type="text" name="startingValue" value={renderValues.startingValue} onChange={this.handleChange}>
+              </input>
+              <br/>
+
+              <div >
+                Maximum Negative Spike:
+              </div>
+
+              <input  type="text" name="maxNegSpike" value={renderValues.maxNegSpike} onChange={this.handleChange}></input>
+              <br/>
+
+              <div >
+                Maximum Positive Spike:</div>
+              <input  type="text" name="maxPosSpike" value={renderValues.maxPosSpike} onChange={this.handleChange}></input>
+              <br/>
+
+              <div >
+                Interval change:</div>
+
+              <input  type="text" name="dY" value={renderValues.dY} onChange={this.handleChange}></input>
+              <br/>
+
+              <div >
+                Anomaly Probability:
+              </div>
+              <input  type="text" name="anomalyProbability" value={renderValues.anomalyProbability} onChange={this.handleChange}></input>
+              <br/>
+            </div>
+          } 
           <div >
-            Start Value:
+            Interval (ms):
           </div>
-          <input  type="text" name="startingValue" value={this.state.startingValue} onChange={this.handleChange}>
-          </input>
-          <br/>
+          <input  type="text" name="frequency" value={renderValues.frequency} onChange={this.handleChange}></input>
 
-          <div >
-            Maximum Negative Spike:
-          </div>
-          <input  type="text" name="maxNegSpike" value={this.state.maxNegSpike} onChange={this.handleChange}></input>
-          <br/>
-
-          <div >
-            Maximum Positive Spike:</div>
-          <input  type="text" name="maxPosSpike" value={this.state.maxPosSpike} onChange={this.handleChange}></input>
-          <br/>
-
-          <div >
-            Interval change:</div>
-          <input  type="text" name="dY" value={this.state.dY} onChange={this.handleChange}></input>
-          <br/>
-
-          <div >
-            Anomaly Probability:
-          </div>
-          <input  type="text" name="anomalyProbability" value={this.state.anomalyProbability} onChange={this.handleChange}></input>
-          <br/>
-
-          <div >
-            Frequency:
-          </div>
-          <input  type="text" name="frequency" value={this.state.frequency} onChange={this.handleChange}></input>
           <div >
             Sensor-ID:
           </div>
-          <input  type="text" name="sensorId" value={this.state.sensorId} onChange={this.handleChange}></input>
+          <input  type="text" name="sensorId" value={renderValues.sensorId} onChange={this.handleChange}></input>
         </form>
 
 
-        <button onClick={this.startSimulation} className="btn-success">Create Sensor</button>
+        {isSensorSelected ? (
+            <button onClick={this.changeSimulation} className="btn-success">Update Sensor</button>
+        ) : (
+            <button onClick={this.startSimulation} className="btn-success">Create Sensor</button>
+        )}
         <br/>
      </div>
     );

@@ -11,16 +11,4 @@ public class MyMonitor implements Runnable {
 			notifyAll();
         }
 	}
-	
-	public void waitTillNextFire() {
-		synchronized (this) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
-
 }

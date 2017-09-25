@@ -59,12 +59,15 @@ class App extends Component {
         <div className="row">
           <div className="col-lg-4" style={{borderStyle: 'solid'}}>
             <SensorList sensors={this.state.sensors}
-              selectedSensorId={this.state.selectedSensorId}
-              handleSelectedSensor={this.handleSelectedSensor}
-              handleSensorUpdate={this.handleSensorUpdate} /> 
+                        selectedSensorId={this.state.selectedSensorId}
+                        handleSelectedSensor={this.handleSelectedSensor}
+                        handleSensorUpdate={this.handleSensorUpdate} /> 
           </div>
           <div className="col-lg-4" style={{borderStyle: 'solid'}}>
-            <InputForm handleSensorUpdate={this.handleSensorUpdate} />
+            <InputForm  sensors={this.state.sensors}
+                        selectedSensorId={this.state.selectedSensorId}
+                        handleSensorUpdate={this.handleSensorUpdate} />
+
           </div>
           <div className="col-lg-4" style={{borderStyle: 'solid'}}>
             <MqttConsole selectedSensorId={this.state.selectedSensorId} />

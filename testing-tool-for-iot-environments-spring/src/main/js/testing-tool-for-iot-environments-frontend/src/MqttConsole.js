@@ -9,33 +9,27 @@ let client = mqtt.connect('tcp://localhost:1884')
 
 class MqttConsole extends Component {
   state: {
-    messages: Array<string>
+    messages: Array<string>,
+    oldSensorId: string
   }
 
 
   constructor (props: Object) {
     super(props);
 
-
-
     this.state = {
-      messages: []
+      messages: [],
+      oldSensorId: ''
     };
     
-    client.on('connect', () => {
-      //client.subscribe(props.selectedSensorId);
-      client.subscribe('asdf');
-    })
-
 
     client.on('message', (topic: string, message: string) => {
       let tempMessages = this.state.messages; 
 
-
-
+      if (tempMessages.length === 3)
+        tempMessages = tempMessages.slice(1);
+      
       tempMessages.push(message.toString());
-
-
 
       this.setState({
         messages: tempMessages
@@ -44,16 +38,24 @@ class MqttConsole extends Component {
   }
 
   render() {
-
+    if (this.props.selectedSensorId !== this.state.oldSensorId) {
+      client.unsubscribe(this.state.oldSensorId);
+      client.subscribe(this.props.selectedSensorId);
+      this.setState({
+        oldSensorId: this.props.selectedSensorId,
+        messages: []
+      });
+    }
+    
     return (
       <MuiThemeProvider >
-      <List>
-        {
-          this.state.messages.map((iterMessage) => (
-            <ListItem primaryText={iterMessage} />
-          ))
-        }
-      </List>
+        <List >
+          {
+            this.state.messages.map((iterMessage) => (
+              <ListItem primaryText={iterMessage} />
+            ))
+          }
+        </List>
       </MuiThemeProvider>
     );
   }
