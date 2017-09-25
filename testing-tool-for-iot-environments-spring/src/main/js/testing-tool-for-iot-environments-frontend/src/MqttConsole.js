@@ -51,9 +51,10 @@ class MqttConsole extends Component {
       <MuiThemeProvider >
         <List >
           {
-            this.state.messages.map((iterMessage) => (
-              <ListItem primaryText={iterMessage} />
-            ))
+            this.state.messages.map((iterMessage) => {
+              const iterKey = this.state.messages.indexOf(iterMessage); 
+              return (<ListItem key={iterKey} primaryText={iterMessage} />);
+            })
           }
         </List>
       </MuiThemeProvider>

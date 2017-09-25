@@ -1,5 +1,7 @@
 // @flow
 import axios from 'axios';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
 
 function stopSimulation() {
@@ -224,12 +226,12 @@ class InputForm extends Component {
 
 
         {isSensorSelected ? (
-            <button onClick={this.changeSimulation} className="btn-success">Update Sensor</button>
+          <RaisedButton onClick={this.changeSimulation} label="Update Sensor"secondary={true} />
         ) : (
-            <button onClick={this.startSimulation} className="btn-success">Create Sensor</button>
+          <RaisedButton onClick={this.startSimulation} label="Create Sensor" primary={true} />
         )}
         <br/>
-     </div>
+      </div>
     );
   }
 }

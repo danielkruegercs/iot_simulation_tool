@@ -1,5 +1,6 @@
 // @flow
 import axios from 'axios';
+import FontIcon from 'material-ui/FontIcon';
 import {List, ListItem} from 'material-ui/List';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import React, { Component } from 'react';
@@ -40,7 +41,9 @@ class SensorList extends Component {
   }
 
   handleDoubleClick = (e: Object) => {
-    const sensorId: string = "sensorId=" + e.target.textContent;
+    e.stopPropagation();
+
+    const sensorId: string = "sensorId=" + e.target.parentElement.textContent.replace(e.target.textContent, '');
     const request : string = "/deleteSensor?" + sensorId;
     
     this.props.handleSelectedSensor('');
@@ -56,11 +59,23 @@ class SensorList extends Component {
         <List >
           {
             this.props.sensors.map((iterSensor) => {
+              const iterKey = this.props.sensors.indexOf(iterSensor);
               
               if (iterSensor.sensorId === this.props.selectedSensorId)
-                return (<ListItem style={{backgroundColor: 'green'}} onClick={this.handleClick} onDoubleClick={this.handleDoubleClick} primaryText={iterSensor.sensorId} />);
+                return (<ListItem key={iterKey} style={{backgroundColor: 'green'}} 
+                                  onClick={this.handleClick} 
+                                  rightIconButton={<FontIcon sensorId={iterSensor.sensorId}
+                                                             hoverColor={'lightgrey'}
+                                                             className="material-icons" 
+                                                             onClick={this.handleDoubleClick}>close</FontIcon>} 
+                                  primaryText={iterSensor.sensorId} />);
               else
-                return (<ListItem onClick={this.handleClick} onDoubleClick={this.handleDoubleClick} primaryText={iterSensor.sensorId} />);
+                return (<ListItem key={iterKey} onClick={this.handleClick} 
+                                  rightIconButton={<FontIcon sensorId={iterSensor.sensorId}
+                                                             hoverColor={'lightgrey'}
+                                                             className="material-icons" 
+                                                             onClick={this.handleDoubleClick}>close</FontIcon>} 
+                                  primaryText={iterSensor.sensorId} />);
             })
           }
         </List>

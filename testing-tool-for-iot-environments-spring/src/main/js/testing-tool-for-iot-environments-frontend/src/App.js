@@ -51,6 +51,7 @@ class App extends Component {
 
   render() {
     return (
+      <MuiThemeProvider>
       <div className="container-fluid">
         <div className="row">
           <h2>Testing Tool For IoT Environments</h2>
@@ -64,7 +65,7 @@ class App extends Component {
                         handleSensorUpdate={this.handleSensorUpdate} /> 
           </div>
           <div className="col-lg-4" style={{borderStyle: 'solid'}}>
-            <InputForm  sensors={this.state.sensors}
+            <InputForm  className="col-lg-4" sensors={this.state.sensors}
                         selectedSensorId={this.state.selectedSensorId}
                         handleSensorUpdate={this.handleSensorUpdate} />
 
@@ -75,6 +76,7 @@ class App extends Component {
 
         </div>
       </div>
+      </MuiThemeProvider>
     );
   }
 }
