@@ -36,9 +36,6 @@ public class BenchmarkManager {
         
         
 
-        EPServiceProvider receiverSenderEngine = EPServiceProviderManager.getDefaultProvider();
-        
-        
         while (!myManager.benchmarkFinished) {
         	try {
 				Thread.sleep(1);

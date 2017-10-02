@@ -38,7 +38,7 @@ class InputForm extends Component {
         dY:                 '1',
         anomalyProbability: '10',
         frequency:          '1000',
-        sensorId:           'asdf',
+        sensorId:           'mySensor',
         untouched:          true
       };
     }

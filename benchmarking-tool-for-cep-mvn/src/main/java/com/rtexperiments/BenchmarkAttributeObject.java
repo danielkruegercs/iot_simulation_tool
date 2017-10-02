@@ -14,7 +14,7 @@ public class BenchmarkAttributeObject {
 	// primitive type variables
 	// numberOfThreads and numberOfLoops should only be set in one place
 	// TODO: put values into config file and read values from file
-	private final int numberOfThreads 	 		  		= 500;
+	private final int numberOfThreads 	 		  		= 1;
 	private final int numberOfLoops   	 		  		= 1;
 	private final int threadPeriod				  		= 1000; /* ns */
 	private final int intervalPeriod					= 1;    /* ms */
